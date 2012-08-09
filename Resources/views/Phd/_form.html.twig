@@ -1,0 +1,7 @@
+<form action="{{ new is empty ? path('phd_update', {'id': app.request.attributes.get('id')}) : path('phd_create') }}" method="post" {{ form_enctype(form) }}>
+  <input type="hidden" name="_method" value="{{ new is empty ? 'PUT' : 'POST' }}" />
+  {{ form_errors(form) }}
+  {{ form_widget(form) }}
+
+  <input type="submit" name="Go" />
+</form>
