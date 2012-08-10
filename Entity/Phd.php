@@ -178,6 +178,27 @@ class Phd
     }
 
     /**
+     * Get file
+     *
+     * @return \Symfony\Component\HttpFoundation\File\UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * Set file
+     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $file
+     * @return phd
+     */
+    public function setFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file)
+    {
+        $this->file = $file;
+        return $this;
+    }
+
+    /**
      * File Management
      */
     public function getAbsolutePath()
@@ -246,7 +267,7 @@ class Phd
 
     public static function determineValidationGroups(\Symfony\Component\Form\FormInterface $form)
     {
-
+        return null === $form->getData()->getId() ? array('Default', 'registration') : array('Default');
     }
 
 }

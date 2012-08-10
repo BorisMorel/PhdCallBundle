@@ -4,10 +4,12 @@ namespace IMAG\PhdCallBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="IMAG\PhdCallBundle\Repository\PhdStudentRepository")
  * @ORM\Table(name="phd_student", uniqueConstraints={@ORM\UniqueConstraint(columns={"phd_id", "student_id"})})
+ * @UniqueEntity({"phdId", "studentId"})
  * @ORM\HasLifecycleCallbacks
  */
 class PhdStudent

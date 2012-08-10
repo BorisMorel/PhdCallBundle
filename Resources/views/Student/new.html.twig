@@ -1,0 +1,5 @@
+{% extends "IMAGPhdCallBundle::layout.html.twig" %}
+
+{% block body %}
+{% include('IMAGPhdCallBundle:Student:_form.html.twig') with {'new': 'true', 'form': form} only %}
+{% endblock body %}
