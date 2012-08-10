@@ -125,6 +125,61 @@ class Phd
         return $this->abstract;
     }
 
+    /**
+     * Get createdAt
+     *
+     * @return datetime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return datetime 
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Add studentIds
+     *
+     * @param IMAG\PhdCallBundle\Entity\PhdStudent $studentIds
+     * @return Phd
+     */
+    public function addStudentId(\IMAG\PhdCallBundle\Entity\PhdStudent $studentIds)
+    {
+        $this->studentIds[] = $studentIds;
+        return $this;
+    }
+
+    /**
+     * Remove studentIds
+     *
+     * @param IMAG\PhdCallBundle\Entity\PhdStudent $studentIds
+     */
+    public function removeStudentId(\IMAG\PhdCallBundle\Entity\PhdStudent $studentIds)
+    {
+        $this->studentIds->removeElement($studentIds);
+    }
+
+    /**
+     * Get studentIds
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getStudentIds()
+    {
+        return $this->studentIds;
+    }
+
+    /**
+     * File Management
+     */
     public function getAbsolutePath()
     {
         return null === $this->path ? null : $this->getUploadRootDir().'/'.$this->path;
@@ -193,4 +248,5 @@ class Phd
     {
 
     }
+
 }
