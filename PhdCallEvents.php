@@ -5,7 +5,7 @@ namespace IMAG\PhdCallBundle;
 final class PhdCallEvents
 {
     /**
-     * You can manipulate the Student object before persist
+     * You can manipulate the Student object before it was persisted
      *
      * @return IMAG\PhdCallBundle\Entity\Student
      */
