@@ -14,7 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 use IMAG\PhdCallBundle\Form\Type\StudentType,
     IMAG\PhdCallBundle\Entity\Student,
     IMAG\PhdCallBundle\Event\StudentEvent,
-    IMAG\PhdCallBundle\PhdCallEvents
+    IMAG\PhdCallBundle\Event\PhdCallEvents
     ;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace IMAG\PhdCallBundle;
+namespace IMAG\PhdCallBundle\Event;
 
 final class PhdCallEvents
 {
