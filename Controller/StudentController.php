@@ -12,7 +12,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     ;
 
 use IMAG\PhdCallBundle\Form\Type\StudentType,
-    IMAG\PhdCallBundle\Entity\Student
+    IMAG\PhdCallBundle\Entity\Student,
+    IMAG\PhdCallBundle\Event\StudentEvent,
+    IMAG\PhdCallBundle\PhdCallEvents
     ;
 
 /**
@@ -42,14 +44,19 @@ class StudentController extends Controller
     public function createAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-
+        $dispatcher = $this->get('event_dispatcher');
         $form =  $this->createForm(new StudentType());
        
         $form->bind($request);
 
         if ($form->isValid()) {
-            $em->persist($form->getData());
+            $event = new StudentEvent($form->getData());
+            $dispatcher->dispatch(PhdCallEvents::STUDENT_PRE_REGISTER, $event);
+            
+            $em->persist($event->getStudent());
             $em->flush();
+           
+            $dispatcher->dispatch(PhdCallEvents::STUDENT_POST_REGISTER, $event);
 
             return $this->redirect($this->generateUrl('student_show', array('id' => $form->getData()->getId())));
         }
