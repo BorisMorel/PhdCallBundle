@@ -7,7 +7,7 @@ use Symfony\Component\Form\AbstractType,
     Symfony\Component\OptionsResolver\OptionsResolverInterface
     ;
 
-class StudentType extends AbstractType
+class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -24,12 +24,12 @@ class StudentType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'IMAG\PhdCallBundle\Entity\Student',
+            'data_class' => 'IMAG\PhdCallBundle\Entity\User',
         ));
     }
 
     public function getName()
     {
-        return 'Student';
+        return 'User';
     }
 }

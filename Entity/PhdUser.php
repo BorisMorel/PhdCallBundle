@@ -7,12 +7,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass="IMAG\PhdCallBundle\Repository\PhdStudentRepository")
- * @ORM\Table(name="phd_student", uniqueConstraints={@ORM\UniqueConstraint(columns={"phd_id", "student_id"})})
- * @UniqueEntity({"phdId", "studentId"})
+ * @ORM\Entity(repositoryClass="IMAG\PhdCallBundle\Repository\PhdUserRepository")
+ * @ORM\Table(name="phd_user", uniqueConstraints={@ORM\UniqueConstraint(columns={"phd_id", "user_id"})})
+ * @UniqueEntity({"phdId", "userId"})
  * @ORM\HasLifecycleCallbacks
  */
-class PhdStudent
+class PhdUser
 {
     /** 
      * @ORM\Id
@@ -37,17 +37,17 @@ class PhdStudent
     protected $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Phd", inversedBy="studentIds")
+     * @ORM\ManyToOne(targetEntity="Phd", inversedBy="userIds")
      * @ORM\JoinColumn(name="phd_id", referencedColumnName="id", nullable=false)
      */
     protected $phdId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Student", inversedBy="phdIds")
-     * @ORM\JoinColumn(name="student_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="phdIds")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      * @Assert\Type("object")
      */
-    protected $studentId;
+    protected $userId;
 
     /**
      * Get id
@@ -83,7 +83,7 @@ class PhdStudent
      * Set phdId
      *
      * @param IMAG\PhdCallBundle\Entity\Phd $phdId
-     * @return PhdStudent
+     * @return PhdUser
      */
     public function setPhdId(\IMAG\PhdCallBundle\Entity\Phd $phdId)
     {
@@ -102,25 +102,25 @@ class PhdStudent
     }
 
     /**
-     * Set studentId
+     * Set userId
      *
-     * @param IMAG\PhdCallBundle\Entity\Student $studentId
-     * @return PhdStudent
+     * @param IMAG\PhdCallBundle\Entity\User $userId
+     * @return PhdUser
      */
-    public function setStudentId(\IMAG\PhdCallBundle\Entity\Student $studentId)
+    public function setUserId(\IMAG\PhdCallBundle\Entity\User $userId)
     {
-        $this->studentId = $studentId;
+        $this->userId = $userId;
         return $this;
     }
 
     /**
-     * Get studentId
+     * Get userId
      *
-     * @return IMAG\PhdCallBundle\Entity\Student 
+     * @return IMAG\PhdCallBundle\Entity\User 
      */
-    public function getStudentId()
+    public function getUserId()
     {
-        return $this->studentId;
+        return $this->userId;
     }
 
     public function __construct()

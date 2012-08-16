@@ -61,14 +61,14 @@ class Phd
     protected $file;
 
     /**
-     * @ORM\OneToMany(targetEntity="PhdStudent", mappedBy="phdId")
+     * @ORM\OneToMany(targetEntity="PhdUser", mappedBy="phdId")
      */
-    protected $studentIds;
+    protected $userIds;
 
     public function __construct()
     {
         $this->createdAt = $this->updatedAt = new \DateTime('now');
-        $this->studentIds = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->userIds = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -146,35 +146,35 @@ class Phd
     }
 
     /**
-     * Add studentIds
+     * Add userIds
      *
-     * @param IMAG\PhdCallBundle\Entity\PhdStudent $studentIds
+     * @param IMAG\PhdCallBundle\Entity\PhdUser $userIds
      * @return Phd
      */
-    public function addStudentId(\IMAG\PhdCallBundle\Entity\PhdStudent $studentIds)
+    public function addUserId(\IMAG\PhdCallBundle\Entity\PhdUser $userIds)
     {
-        $this->studentIds[] = $studentIds;
+        $this->userIds[] = $userIds;
         return $this;
     }
 
     /**
-     * Remove studentIds
+     * Remove userIds
      *
-     * @param IMAG\PhdCallBundle\Entity\PhdStudent $studentIds
+     * @param IMAG\PhdCallBundle\Entity\PhdUser $userIds
      */
-    public function removeStudentId(\IMAG\PhdCallBundle\Entity\PhdStudent $studentIds)
+    public function removeUserId(\IMAG\PhdCallBundle\Entity\PhdUser $userIds)
     {
-        $this->studentIds->removeElement($studentIds);
+        $this->userIds->removeElement($userIds);
     }
 
     /**
-     * Get studentIds
+     * Get userIds
      *
      * @return Doctrine\Common\Collections\Collection 
      */
-    public function getStudentIds()
+    public function getUserIds()
     {
-        return $this->studentIds;
+        return $this->userIds;
     }
 
     /**
