@@ -11,10 +11,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method
     ;
 
+use JMS\SecurityExtraBundle\Annotation\Secure;
+
 use IMAG\PhdCallBundle\Form\Type\UserType,
     IMAG\PhdCallBundle\Entity\User,
-    IMAG\PhdCallBundle\Event\UserEvent,
-    IMAG\PhdCallBundle\Event\PhdCallEvents
+    IMAG\PhdCallBundle\Event\UserEvent
     ;
 
 /**
@@ -43,22 +44,8 @@ class UserController extends Controller
      */
     public function createAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $dispatcher = $this->get('event_dispatcher');
-        $form =  $this->createForm(new UserType());
-       
-        $form->bind($request);
-
-        if ($form->isValid()) {
-            $event = new UserEvent($form->getData());
-            $dispatcher->dispatch(PhdCallEvents::USER_CREATED_PRE, $event);
-            
-            $em->persist($event->getUser());
-            $em->flush();
-           
-            $dispatcher->dispatch(PhdCallEvents::USER_CREATED_POST, $event);
-
-            return $this->redirect($this->generateUrl('user_show', array('id' => $form->getData()->getId())));
+        if ($user = $this->processForm($request)) {
+            $this->redirect($this->generateUrl('user_show', array('id' => $user->getId())));
         }
 
         return array(
@@ -70,6 +57,7 @@ class UserController extends Controller
      * @Route("/{id}/edit", name="user_edit")
      * @Template()
      * @Method("GET")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function editAction($id)
     {
@@ -77,6 +65,10 @@ class UserController extends Controller
             ->getRepository("IMAGPhdCallBundle:User")
             ->getById($id)
             ;
+
+        if (null === $user) {
+            throw $this->createNotFoundException("This user doesn't exists");  
+        }
 
         $form = $this->createForm(new UserType(), $user);
 
@@ -89,34 +81,52 @@ class UserController extends Controller
      * @Route("/{id}", name="user_update")
      * @Template("IMAGPhdCallBundle:User:edit.html.twig")
      * @Method("PUT")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function updateAction(Request $request, $id)
     {
+        if ($user = $this->processForm($request, $id)) {
+            $this->redirect($this->generateUrl('user_show', array('id' => $user->getId())));
+        }
+
+        return array(
+            'form' => $form->createView()
+        );
+    }
+
+    private function processForm(Request $request, $id = null)
+    {
         $em = $this->getDoctrine()->getManager();
         $dispatcher = $this->get('event_dispatcher');
-        $user = $this->getDoctrine()->getManager()
-            ->getRepository("IMAGPhdCallBundle:User")
-            ->getById($id)
-            ;
-        
+
+        if (null === $id) {
+            $user = new User();
+            $listener = 'CREATED';
+        } else {
+            $user = $this->getDoctrine()->getManager()
+                ->getRepository("IMAGPhdCallBundle:User")
+                ->getById($id)
+                ;
+            $listener = 'UPDATED';
+        }
+
         $form = $this->createForm(new UserType(), $user);
-        
+
         $form->bind($request);
 
         if ($form->isValid()) {
             $event = new UserEvent($user);
-            $dispatcher->dispatch(PhdCallEvents::USER_UPDATED_PRE, $event);
-
+            $dispatcher->dispatch(constant("IMAG\PhdCallBundle\Event\PhdCallEvents::USER_{$listener}_PRE"), $event);
+            
             $em->persist($user);
             $em->flush();
 
-            $dispatcher->dispatch(PhdCallEvents::USER_UPDATED_POST, $event);
+            $dispatcher->dispatch(constant("IMAG\PhdCallBundle\Event\PhdCallEvents::USER_{$listener}_POST"), $event);
 
-            return $this->redirect($this->generateUrl('user_edit', array('id' => $user->getId())));
+
+            return $user;
         }
-        
-        return array(
-            'form' => $form->createView()
-        );
+
+        return false;
     }
 }
