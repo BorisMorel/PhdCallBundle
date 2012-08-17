@@ -20,9 +20,8 @@ class UserType extends AbstractType
             ->add('city')
             ->add('roles', 'choice', array(
                 'choices' => $options['ctrlOptions']['choices'],
-                'multiple' => false,
+                'multiple' => true,
                 'expanded' => true,
-                'data' => 'ROLE_USER'
             ))
             ;
     }
@@ -32,7 +31,11 @@ class UserType extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'IMAG\PhdCallBundle\Entity\User',
             'ctrlOptions' => array(
-                'choices' => array()
+                'choices' => array(
+                    'ROLE_USER' => 'User',
+                    'ROLE_REVIEWER' => 'Reviewer',
+                    'ROLE_ADMIN' => 'Admin'
+                )
             )));
     }
 

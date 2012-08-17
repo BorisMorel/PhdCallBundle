@@ -29,15 +29,7 @@ class UserController extends Controller
      */
     public function newAction()
     {
-        $form = $this->createForm(new UserType(),
-                                  null, 
-                                  array('ctrlOptions' => array(
-                                      'choices' => array(
-                                          'ROLE_USER' => 'User',
-                                          'ROLE_REVIEWER' => 'Reviewer',
-                                          'ROLE_ADMIN' => 'Admin'
-                                      )
-                                  )));
+        $form = $this->createForm(new UserType());
         
         return array(
             'form' => $form->createView()
@@ -73,5 +65,52 @@ class UserController extends Controller
             'form' => $form->createView()
         );
     }
-    
+
+    /**
+     * @Route("/{id}/edit", name="user_edit")
+     * @Template()
+     * @Method("GET")
+     */
+    public function editAction($id)
+    {
+        $user = $this->getDoctrine()->getManager()
+            ->getRepository("IMAGPhdCallBundle:User")
+            ->getById($id)
+            ;
+
+        $form = $this->createForm(new UserType(), $user);
+
+        return array(
+            'form' => $form->createView()
+        );
+    }
+
+    /**
+     * @Route("/{id}", name="user_update")
+     * @Template("IMAGPhdCallBundle:User:edit.html.twig")
+     * @Method("PUT")
+     */
+    public function updateAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getDoctrine()->getManager()
+            ->getRepository("IMAGPhdCallBundle:User")
+            ->getById($id)
+            ;
+        
+        $form = $this->createForm(new UserType(), $user);
+        
+        $form->bind($request);
+
+        if ($form->isValid()) {
+            $em->persist($user);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('user_edit', array('id' => $user->getId())));
+        }
+        
+        return array(
+            'form' => $form->createView()
+        );
+    }
 }

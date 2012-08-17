@@ -20,6 +20,18 @@ use IMAG\PhdCallBundle\Entity\User;
  */
 class UserRepository extends EntityRepository implements UserProviderInterface
 {
+    public function getById($id)
+    {
+        $q = $this->createQueryBuilder('u')
+            ->select('u')
+            ->where('u.id = ?1')
+            ->setParameter(1, $id)
+            ->getQuery()
+            ;
+
+        return $q->getOneOrNullResult();
+    }
+
     /**
      * {@inheritdoc}
      */
