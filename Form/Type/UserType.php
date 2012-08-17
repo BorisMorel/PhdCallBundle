@@ -18,12 +18,16 @@ class UserType extends AbstractType
             ->add('address')
             ->add('zip')
             ->add('city')
-            ->add('roles', 'choice', array(
-                'choices' => $options['ctrlOptions']['choices'],
-                'multiple' => true,
-                'expanded' => true,
-            ))
             ;
+        if (true === $options['allowedRolesChoices']) {
+            $builder
+                ->add('roles', 'choice', array(
+                    'choices' => $options['ctrlOptions']['choices'],
+                    'multiple' => true,
+                    'expanded' => true,
+                ))
+                ;
+        }
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -36,7 +40,9 @@ class UserType extends AbstractType
                     'ROLE_REVIEWER' => 'Reviewer',
                     'ROLE_ADMIN' => 'Admin'
                 )
-            )));
+            ),
+            'allowedRolesChoices' => false,
+        ));
     }
 
     public function getName()

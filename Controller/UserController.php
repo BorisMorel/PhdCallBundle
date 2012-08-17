@@ -45,7 +45,7 @@ class UserController extends Controller
     public function createAction(Request $request)
     {
         if ($user = $this->processForm($request)) {
-            $this->redirect($this->generateUrl('user_show', array('id' => $user->getId())));
+            $this->redirect($this->generateUrl('apply', array('id' => $user->getId())));
         }
 
         return array(
@@ -70,7 +70,7 @@ class UserController extends Controller
             throw $this->createNotFoundException("This user doesn't exists");  
         }
 
-        $form = $this->createForm(new UserType(), $user);
+        $form = $this->createForm(new UserType(), $user, array('allowedRolesChoices' => true));
 
         return array(
             'form' => $form->createView()
@@ -86,7 +86,7 @@ class UserController extends Controller
     public function updateAction(Request $request, $id)
     {
         if ($user = $this->processForm($request, $id)) {
-            $this->redirect($this->generateUrl('user_show', array('id' => $user->getId())));
+            $this->redirect($this->generateUrl('apply', array('id' => $user->getId())));
         }
 
         return array(
