@@ -1,5 +1,10 @@
+{% extends "IMAGPhdCallBundle::layout.html.twig" %}
+
+{% block body %}
 <ul>
  <li>{{ phd.subject }} </li>
  <li>{{ phd.abstract }}</li>
+ <li>{{ phd.category }}</li>
  <li> <a href="{{ asset(phd.webPath) }}">{{ phd.webPath }}</a></li>
 </ul>
+{% endblock body %}

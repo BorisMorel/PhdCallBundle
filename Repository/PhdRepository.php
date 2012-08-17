@@ -8,9 +8,10 @@ class PhdRepository extends EntityRepository
 {
     public function getById($id) 
     {
-        $q = $this->createQueryBuilder('phd')
-            ->select('phd')
-            ->where('phd.id = ?1')
+        $q = $this->createQueryBuilder('p')
+            ->select('p', 'pc')
+            ->join('p.category', 'pc')
+            ->where('p.id = ?1')
             ->setParameter(1, $id)
             ->getQuery();
 

@@ -29,7 +29,15 @@ class UserController extends Controller
      */
     public function newAction()
     {
-        $form = $this->createForm(new UserType());
+        $form = $this->createForm(new UserType(),
+                                  null, 
+                                  array('ctrlOptions' => array(
+                                      'choices' => array(
+                                          'ROLE_USER' => 'User',
+                                          'ROLE_REVIEWER' => 'Reviewer',
+                                          'ROLE_ADMIN' => 'Admin'
+                                      )
+                                  )));
         
         return array(
             'form' => $form->createView()

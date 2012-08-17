@@ -5,8 +5,12 @@ namespace IMAG\PhdCallBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 
 use Symfony\Component\Security\Core\User\UserProviderInterface,
-    Symfony\Component\Security\Core\User\UserInterface
+    Symfony\Component\Security\Core\User\UserInterface,
+    Symfony\Component\Security\Core\Exception\UsernameNotFoundException,
+    Symfony\Component\Security\Core\Exception\UnsupportedUserException
     ;
+
+use IMAG\PhdCallBundle\Entity\User;
 
 /**
  * UserRepository
@@ -21,7 +25,24 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        var_dump($username);exit;
+        // Throw the exception if the username is not provided.
+        if (empty($username)) {
+            throw new UsernameNotFoundException('The username is not provided.');
+        }
+
+        $q = $this->createQueryBuilder('u')
+            ->select('u')
+            ->where('u.email LIKE ?1')
+            ->setParameter(1, $username)
+            ->getQuery()
+            ;
+
+        try {
+            return $q->getSingleResult();
+        } catch(\Exception $expt) {
+            throw new UsernameNotFoundException(sprintf('User "%s" not found', $username));
+        }
+        
     }
 
     /**
@@ -29,7 +50,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        return $user;
+        if (!$user instanceof User) {
+            throw new UnsupportedUserException(sprintf('Instance of "%s" are not supported.', get_class($user)));
+        }
+        
+        return $this->loadUserByUsername($user->getEmail());
     }
     
     public function supportsClass($class)

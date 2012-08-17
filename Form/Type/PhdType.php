@@ -14,6 +14,12 @@ class PhdType extends AbstractType
         $builder
             ->add('subject', null, array('required' => false))
             ->add('abstract', null, array('required' => false))
+            ->add('category', 'entity', array(
+                'class' => 'IMAG\PhdCallBundle\Entity\PhdCategory',
+                'expanded' => false,
+                'multiple' => false,
+                'empty_value' => 'Choose an option'
+            ))
             ->add('file', 'file', array('required' => false))
             ;                  
     }

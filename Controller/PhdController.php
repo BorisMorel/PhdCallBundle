@@ -11,6 +11,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method
     ;
 
+use JMS\SecurityExtraBundle\Annotation\Secure;
+
 use IMAG\PhdCallBundle\Form\Type\PhdType,
     IMAG\PhdCallBundle\Entity\Phd
     ;
@@ -42,6 +44,7 @@ class PhdController extends Controller
      * @Route("/new", name="phd_new")
      * @Template()
      * @Method("GET")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function newAction()
     {
@@ -56,6 +59,7 @@ class PhdController extends Controller
      * @Route("/", name="phd_create")
      * @Template("IMAGPhdCallBundle:Phd:new.html.twig")
      * @Method("POST")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function createAction(Request $request)
     {
@@ -81,6 +85,7 @@ class PhdController extends Controller
      * @Route("/{id}/edit", name="phd_edit", requirements={"id" = "\d+"})
      * @Template()
      * @Method("GET")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function editAction($id)
     {
@@ -100,6 +105,7 @@ class PhdController extends Controller
      * @Route("/{id}", name="phd_update")
      * @Template("IMAGPhdCallBundle:Phd:edit.html.twig")
      * @Method("PUT")
+     * @Secure(roles="ROLE_ADMIN")
      */
     public function updateAction(Request $request, $id)
     {

@@ -18,6 +18,12 @@ class UserType extends AbstractType
             ->add('address')
             ->add('zip')
             ->add('city')
+            ->add('roles', 'choice', array(
+                'choices' => $options['ctrlOptions']['choices'],
+                'multiple' => false,
+                'expanded' => true,
+                'data' => 'ROLE_USER'
+            ))
             ;
     }
 
@@ -25,7 +31,9 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'IMAG\PhdCallBundle\Entity\User',
-        ));
+            'ctrlOptions' => array(
+                'choices' => array()
+            )));
     }
 
     public function getName()
