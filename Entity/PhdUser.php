@@ -37,17 +37,17 @@ class PhdUser
     protected $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Phd", inversedBy="userIds")
+     * @ORM\ManyToOne(targetEntity="Phd", inversedBy="users")
      * @ORM\JoinColumn(name="phd_id", referencedColumnName="id", nullable=false)
      */
-    protected $phdId;
+    protected $phd;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="phdIds")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="phds")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      * @Assert\Type("object")
      */
-    protected $userId;
+    protected $user;
 
     /**
      * Get id
@@ -80,47 +80,47 @@ class PhdUser
     }
 
     /**
-     * Set phdId
+     * Set phd
      *
-     * @param IMAG\PhdCallBundle\Entity\Phd $phdId
+     * @param IMAG\PhdCallBundle\Entity\Phd $phd
      * @return PhdUser
      */
-    public function setPhdId(\IMAG\PhdCallBundle\Entity\Phd $phdId)
+    public function setPhd(\IMAG\PhdCallBundle\Entity\Phd $phd)
     {
-        $this->phdId = $phdId;
+        $this->phd = $phd;
         return $this;
     }
 
     /**
-     * Get phdId
+     * Get phd
      *
      * @return IMAG\PhdCallBundle\Entity\Phd 
      */
-    public function getPhdId()
+    public function getPhd()
     {
-        return $this->phdId;
+        return $this->phd;
     }
 
     /**
-     * Set userId
+     * Set user
      *
-     * @param IMAG\PhdCallBundle\Entity\User $userId
+     * @param IMAG\PhdCallBundle\Entity\User $user
      * @return PhdUser
      */
-    public function setUserId(\IMAG\PhdCallBundle\Entity\User $userId)
+    public function setUser(\IMAG\PhdCallBundle\Entity\User $user)
     {
-        $this->userId = $userId;
+        $this->user = $user;
         return $this;
     }
 
     /**
-     * Get userId
+     * Get user
      *
      * @return IMAG\PhdCallBundle\Entity\User 
      */
-    public function getUserId()
+    public function getUser()
     {
-        return $this->userId;
+        return $this->user;
     }
 
     public function __construct()

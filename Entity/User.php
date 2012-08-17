@@ -102,14 +102,14 @@ class User implements UserInterface, EquatableInterface, \Serializable
     protected $updatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity="PhdUser", mappedBy="userId")
+     * @ORM\OneToMany(targetEntity="PhdUser", mappedBy="user")
      */
-    protected $phdIds;
+    protected $phds;
     
     public function __construct()
     {        
         $this->createdAt = $this->updatedAt = new \DateTime('now');
-        $this->phdIds = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->phds = new \Doctrine\Common\Collections\ArrayCollection();
         $this->password = Security::randomPassword();
         $this->roles = array("ROLE_USER");
     }
@@ -347,35 +347,35 @@ class User implements UserInterface, EquatableInterface, \Serializable
     }
 
     /**
-     * Add phdIds
+     * Add phds
      *
-     * @param IMAG\PhdCallBundle\Entity\PhdUser $phdIds
+     * @param IMAG\PhdCallBundle\Entity\PhdUser $phd
      * @return User
      */
-    public function addPhdId(\IMAG\PhdCallBundle\Entity\PhdUser $phdIds)
+    public function addPhd(\IMAG\PhdCallBundle\Entity\PhdUser $phd)
     {
-        $this->phdIds[] = $phdIds;
+        $this->phds[] = $phd;
         return $this;
     }
 
     /**
-     * Remove phdIds
+     * Remove phds
      *
-     * @param IMAG\PhdCallBundle\Entity\PhdUser $phdIds
+     * @param IMAG\PhdCallBundle\Entity\PhdUser $phd
      */
-    public function removePhdId(\IMAG\PhdCallBundle\Entity\PhdUser $phdIds)
+    public function removePhd(\IMAG\PhdCallBundle\Entity\PhdUser $phd)
     {
-        $this->phdIds->removeElement($phdIds);
+        $this->phds->removeElement($phd);
     }
 
     /**
-     * Get phdIds
+     * Get phds
      *
      * @return Doctrine\Common\Collections\Collection 
      */
-    public function getPhdIds()
+    public function getPhds()
     {
-        return $this->phdIds;
+        return $this->phds;
     }
 
     /**

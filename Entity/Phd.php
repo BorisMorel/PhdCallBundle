@@ -61,14 +61,23 @@ class Phd
     protected $file;
 
     /**
-     * @ORM\OneToMany(targetEntity="PhdUser", mappedBy="phdId")
+     * @ORM\OneToMany(targetEntity="PhdUser", mappedBy="phd")
+     * @Assert\Type("object")
      */
-    protected $userIds;
+    protected $users;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="PhdCategory", inversedBy="phds")
+     * @ORM\JoinColumn(nullable=false)
+     * @Assert\Type("object")
+     * @Assert\NotNull()
+     */
+    protected $category;
 
     public function __construct()
     {
         $this->createdAt = $this->updatedAt = new \DateTime('now');
-        $this->userIds = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -146,38 +155,6 @@ class Phd
     }
 
     /**
-     * Add userIds
-     *
-     * @param IMAG\PhdCallBundle\Entity\PhdUser $userIds
-     * @return Phd
-     */
-    public function addUserId(\IMAG\PhdCallBundle\Entity\PhdUser $userIds)
-    {
-        $this->userIds[] = $userIds;
-        return $this;
-    }
-
-    /**
-     * Remove userIds
-     *
-     * @param IMAG\PhdCallBundle\Entity\PhdUser $userIds
-     */
-    public function removeUserId(\IMAG\PhdCallBundle\Entity\PhdUser $userIds)
-    {
-        $this->userIds->removeElement($userIds);
-    }
-
-    /**
-     * Get userIds
-     *
-     * @return Doctrine\Common\Collections\Collection 
-     */
-    public function getUserIds()
-    {
-        return $this->userIds;
-    }
-
-    /**
      * Get file
      *
      * @return \Symfony\Component\HttpFoundation\File\UploadedFile
@@ -196,6 +173,60 @@ class Phd
     {
         $this->file = $file;
         return $this;
+    }
+
+    /**
+     * Add users
+     *
+     * @param IMAG\PhdCallBundle\Entity\PhdUser $user
+     * @return Phd
+     */
+    public function addUser(\IMAG\PhdCallBundle\Entity\PhdUser $user)
+    {
+        $this->users[] = $user;
+        return $this;
+    }
+
+    /**
+     * Remove users
+     *
+     * @param IMAG\PhdCallBundle\Entity\PhdUser $user
+     */
+    public function removeUser(\IMAG\PhdCallBundle\Entity\PhdUser $user)
+    {
+        $this->users->removeElement($user);
+    }
+
+    /**
+     * Get users
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    /**
+     * set category
+     * 
+     * @param IMAG\PhdCallBundle\Entity\PhdCategory $category
+     * @return Phd
+     */
+    public function setCategory(\IMAG\PhdCallBundle\Entity\PhdCategory $category)
+    {
+        $this->category = $category;
+        return $this;
+    }
+ 
+    /**
+     * get category
+     *
+     * @return IMAG\PhdCallBundle\Entity\PhdCategory
+     */
+    public function getCategory()
+    {
+        return $this->category;
     }
 
     /**
