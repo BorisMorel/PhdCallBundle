@@ -11,18 +11,31 @@ class UserSubscriber implements EventSubscriberInterface
     static public function getSubscribedEvents()
     {
         return array(
-            'phd_call.user.register.pre' => array('onUserRegisterPre', 128),
-            'phd_call.user.register.post' => array('onUserRegisterPost', 0)
+            'phd_call.user.created.pre' => array('onUserCreatedPre', 128),
+            'phd_call.user.created.post' => array('onUserCreatedPost', 0),
+            'phd_call.user.updated.pre' => array('onUserUpdatedPre', 128),
+            'phd_call.user.updated.post' => array('onUserUpdatedPost', 0),
         );
     }
 
-    public function onUserRegisterPre(UserEvent $event)
+    public function onUserCreatedPre(UserEvent $event)
     {
         
     }
 
-    public function onUserRegisterPost(UserEvent $event)
+    public function onUserCreatedPost(UserEvent $event)
     {
         
     }
+
+    public function onUserUpdatedPre(UserEvent $event)
+    {
+
+    }
+
+    public function onUserUpdatedPost(UserEvent $event)
+    {
+
+    }
+
 }

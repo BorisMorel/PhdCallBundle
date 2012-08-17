@@ -51,12 +51,12 @@ class UserController extends Controller
 
         if ($form->isValid()) {
             $event = new UserEvent($form->getData());
-            $dispatcher->dispatch(PhdCallEvents::USER_PRE_REGISTER, $event);
+            $dispatcher->dispatch(PhdCallEvents::USER_CREATED_PRE, $event);
             
             $em->persist($event->getUser());
             $em->flush();
            
-            $dispatcher->dispatch(PhdCallEvents::USER_POST_REGISTER, $event);
+            $dispatcher->dispatch(PhdCallEvents::USER_CREATED_POST, $event);
 
             return $this->redirect($this->generateUrl('user_show', array('id' => $form->getData()->getId())));
         }
@@ -93,6 +93,7 @@ class UserController extends Controller
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
+        $dispatcher = $this->get('event_dispatcher');
         $user = $this->getDoctrine()->getManager()
             ->getRepository("IMAGPhdCallBundle:User")
             ->getById($id)
@@ -103,8 +104,13 @@ class UserController extends Controller
         $form->bind($request);
 
         if ($form->isValid()) {
+            $event = new UserEvent($user);
+            $dispatcher->dispatch(PhdCallEvents::USER_UPDATED_PRE, $event);
+
             $em->persist($user);
             $em->flush();
+
+            $dispatcher->dispatch(PhdCallEvents::USER_UPDATED_POST, $event);
 
             return $this->redirect($this->generateUrl('user_edit', array('id' => $user->getId())));
         }
