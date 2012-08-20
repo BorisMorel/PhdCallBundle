@@ -9,7 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass="IMAG\PhdCallBundle\Repository\PhdUserRepository")
  * @ORM\Table(name="phd_user", uniqueConstraints={@ORM\UniqueConstraint(columns={"phd_id", "user_id"})})
- * @UniqueEntity({"phdId", "userId"})
+ * @UniqueEntity({"phd", "user"})
  * @ORM\HasLifecycleCallbacks
  */
 class PhdUser
