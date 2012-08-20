@@ -8,6 +8,19 @@ use IMAG\PhdCallBundle\Event\UserEvent;
 
 class UserSubscriber implements EventSubscriberInterface
 {
+    private 
+        $mailer,
+        $security
+        ;
+
+    public function __construct(\Swift_Mailer $mailer,
+                                \Symfony\Component\Security\Core\Encoder\EncoderFactory $security
+    )
+    {
+        $this->mailer = $mailer;
+        $this->security = $security;
+    }
+
     static public function getSubscribedEvents()
     {
         return array(
@@ -20,12 +33,24 @@ class UserSubscriber implements EventSubscriberInterface
 
     public function onUserCreatedPre(UserEvent $event)
     {
-        
-    }
+        $user = $event->getUser();
+        $encoder = $this->security->getEncoder($user);
 
+        $user->setPassword($encoder->encodePassword($user->getPlainPassword(), $user->getSalt()));
+    }
+    
     public function onUserCreatedPost(UserEvent $event)
     {
+        $user = $event->getUser();
         
+        $message = \Swift_Message::newInstance()
+            ->setSubject('[PERSYVAL] PhdCall Registration Completed')
+            ->setFrom('phdcall@persyval-lab.fr')
+            ->setTo($user->getEmail())
+            ->setBody($user->getPlainPassword())
+            ;
+
+        $this->mailer->send($message);
     }
 
     public function onUserUpdatedPre(UserEvent $event)

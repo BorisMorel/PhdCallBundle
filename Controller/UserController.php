@@ -44,8 +44,10 @@ class UserController extends Controller
      */
     public function createAction(Request $request)
     {
-        if ($user = $this->processForm($request)) {
-            $this->redirect($this->generateUrl('apply', array('id' => $user->getId())));
+        $form = $this->createForm(new UserType());
+        
+        if ($this->processForm($request, $form)) {
+            $this->redirect($this->generateUrl('apply', array('id' => $form->getData()->getId())));
         }
 
         return array(
@@ -57,7 +59,6 @@ class UserController extends Controller
      * @Route("/{id}/edit", name="user_edit")
      * @Template()
      * @Method("GET")
-     * @Secure(roles="ROLE_ADMIN")
      */
     public function editAction($id)
     {
@@ -81,11 +82,17 @@ class UserController extends Controller
      * @Route("/{id}", name="user_update")
      * @Template("IMAGPhdCallBundle:User:edit.html.twig")
      * @Method("PUT")
-     * @Secure(roles="ROLE_ADMIN")
      */
     public function updateAction(Request $request, $id)
     {
-        if ($user = $this->processForm($request, $id)) {
+        $user = $this->getDoctrine()->getManager()
+            ->getRepository("IMAGPhdCallBundle:User")
+            ->getById($id)
+            ;
+
+        $form = $this->createForm(new UserType(), $user, array('allowedRolesChoices' => true));
+
+        if ($this->processForm($request, $form)) {
             $this->redirect($this->generateUrl('apply', array('id' => $user->getId())));
         }
 
@@ -94,25 +101,15 @@ class UserController extends Controller
         );
     }
 
-    private function processForm(Request $request, $id = null)
+    private function processForm(Request $request, \Symfony\Component\Form\Form $form)
     {
         $em = $this->getDoctrine()->getManager();
         $dispatcher = $this->get('event_dispatcher');
 
-        if (null === $id) {
-            $user = new User();
-            $listener = 'CREATED';
-        } else {
-            $user = $this->getDoctrine()->getManager()
-                ->getRepository("IMAGPhdCallBundle:User")
-                ->getById($id)
-                ;
-            $listener = 'UPDATED';
-        }
-
-        $form = $this->createForm(new UserType(), $user);
-
         $form->bind($request);
+
+        $user = $form->getData();
+        $listener = null === $user->getId() ? 'CREATED' : 'UPDATED';
 
         if ($form->isValid()) {
             $event = new UserEvent($user);
@@ -122,11 +119,9 @@ class UserController extends Controller
             $em->flush();
 
             $dispatcher->dispatch(constant("IMAG\PhdCallBundle\Event\PhdCallEvents::USER_{$listener}_POST"), $event);
-
-
-            return $user;
+            return true;
         }
-
+        
         return false;
     }
 }

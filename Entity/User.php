@@ -54,10 +54,21 @@ class User implements UserInterface, EquatableInterface, \Serializable
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\Type("string")
+     * @Assert\type("string")
      * @Assert\NotBlank()
      */
+    protected $salt;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\Type("string")
+     */
     protected $password;
+
+    /**
+     * @Assert\Type("string")
+     */
+    protected $plainPassword;
 
     /**
      * @ORM\Column(type="array")
@@ -107,10 +118,11 @@ class User implements UserInterface, EquatableInterface, \Serializable
     protected $phds;
     
     public function __construct()
-    {        
+    {
+        $this->plainPassword = Security::randomPassword();
+        $this->salt = uniqid(mt_rand(), true);
         $this->createdAt = $this->updatedAt = new \DateTime('now');
         $this->phds = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->password = Security::randomPassword();
         $this->roles = array("ROLE_USER");
     }
 
@@ -134,15 +146,6 @@ class User implements UserInterface, EquatableInterface, \Serializable
         return $this->getEmail();
     }
 
-    /**
-     * Get salt used by UserInterface. Not implemented ; Plain-text password
-     *
-     * @return null
-     */
-    public function getSalt()
-    {
-        return null;
-    }
 
     /**
      * EraseCredentials used by UserInterface.
@@ -161,6 +164,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
     public function setLastname($lastname)
     {
         $this->lastname = $lastname;
+
         return $this;
     }
 
@@ -183,6 +187,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
     public function setFirstname($firstname)
     {
         $this->firstname = $firstname;
+
         return $this;
     }
 
@@ -205,6 +210,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
     public function setEmail($email)
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -219,13 +225,36 @@ class User implements UserInterface, EquatableInterface, \Serializable
     }
 
     /**
-     * Set password
-     * 
+     * Set salt
+     *
      * @return Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
-    public function setPassword()
+    public function setSalt()
     {
-        throw new Expt\AccessDeniedException("Password can be set only by User::__construct()");
+        return new Expt\AccessDeniedException("Salt can be setted only by User::__construct()");
+    }
+
+    /**
+     * Get salt used by UserInterface.
+     *
+     * @return string salt
+     */
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+
+    /**
+     * Set the hashed password
+     * 
+     * @param string $password
+     * @return User
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
     }
 
     /**
@@ -239,6 +268,26 @@ class User implements UserInterface, EquatableInterface, \Serializable
     }
 
     /**
+     * Set plain-text password
+     *
+     * @return Symfony\Component\Security\Core\Exception\AccessDeniedException
+     */
+    public function setPlainPassword()
+    {
+        return new Expt\AccessDeniedException("Plain-text password can be setted only by User::__construct()");
+    }
+
+    /**
+     * Get plain-text password
+     *
+     * @return string plainPassword
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
      * Set Roles
      *
      * @param array roles
@@ -247,6 +296,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
     public function setRoles(array $roles)
     {
         $this->roles = $roles;
+
         return $this;
     }
 
@@ -269,6 +319,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
     public function setAddress($address)
     {
         $this->address = $address;
+
         return $this;
     }
 
@@ -291,6 +342,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
     public function setZip($zip)
     {
         $this->zip = $zip;
+
         return $this;
     }
 
@@ -313,6 +365,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
     public function setCity($city)
     {
         $this->city = $city;
+
         return $this;
     }
 
@@ -347,7 +400,7 @@ class User implements UserInterface, EquatableInterface, \Serializable
     }
 
     /**
-     * Add phds
+     * Add phd
      *
      * @param IMAG\PhdCallBundle\Entity\PhdUser $phd
      * @return User

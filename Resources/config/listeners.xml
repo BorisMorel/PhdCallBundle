@@ -11,6 +11,8 @@
   <services>
     <service id="imag_phd_call.user.listener" class="%imag_phd_call.user.listener.class%">
       <tag name="kernel.event_subscriber" />
+      <argument type="service" id="mailer" />
+      <argument type="service" id="security.encoder_factory" />
     </service>
   </services>
 </container>
