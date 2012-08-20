@@ -2,7 +2,7 @@
 
 namespace IMAG\PhdCallBundle\Util;
 
-class Security
+final class Security
 {
     /**
      * Calculate a uniq password only based on alpha-numeric characters
