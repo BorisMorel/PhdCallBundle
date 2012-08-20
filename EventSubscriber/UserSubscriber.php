@@ -42,7 +42,7 @@ class UserSubscriber implements EventSubscriberInterface
     public function onUserCreatedPost(UserEvent $event)
     {
         $user = $event->getUser();
-        
+
         $message = \Swift_Message::newInstance()
             ->setSubject('[PERSYVAL] PhdCall Registration Completed')
             ->setFrom('phdcall@persyval-lab.fr')
@@ -50,7 +50,10 @@ class UserSubscriber implements EventSubscriberInterface
             ->setBody($user->getPlainPassword())
             ;
 
-        $this->mailer->send($message);
+        if (!$this->mailer->send($message)) {
+            throw new \Exception("Message can't be sending");
+        }
+    
     }
 
     public function onUserUpdatedPre(UserEvent $event)
