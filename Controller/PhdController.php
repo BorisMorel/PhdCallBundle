@@ -34,6 +34,10 @@ class PhdController extends Controller
             ->getRepository("IMAGPhdCallBundle:Phd")
             ->getById($id)
             ;
+        
+        if (null === $phd) {
+            throw $this->createNotFoundException("This phd doesn't exists");
+        }
 
         return array(
             'phd' => $phd
@@ -93,6 +97,10 @@ class PhdController extends Controller
             ->getRepository("IMAGPhdCallBundle:Phd")
             ->getById($id)
             ;
+
+        if (null === $phd) {
+            throw $this->createNotFoundException("This phd doesn't exists");
+        }
 
         $form = $this->createForm(new PhdType(), $phd);
 
