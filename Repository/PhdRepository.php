@@ -15,6 +15,6 @@ class PhdRepository extends EntityRepository
             ->setParameter(1, $id)
             ->getQuery();
 
-        return $q->getSingleResult();
+        return $q->getOneOrNullResult();
     }
 }
