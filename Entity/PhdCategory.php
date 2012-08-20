@@ -30,7 +30,7 @@ class PhdCategory
      * @ORM\Column(type="integer", nullable=true)
      * @Assert\Type("numeric")
      */
-    protected $order;
+    protected $ordering;
 
     /**
      * @ORM\OneToMany(targetEntity="Phd", mappedBy="category")
