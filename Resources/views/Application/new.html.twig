@@ -1,0 +1,47 @@
+{% extends "IMAGPhdCallBundle::layout.html.twig" %}
+
+{% block body %}
+<form action="{{ path('application_create', {'id': app.request.get('id')}) }}" method="POST" {{ form_enctype(form) }}>
+{{ form_errors(form) }}
+
+  {{ form_widget(form.motivation) }}
+  <ul id="career-fields-list" data-prototype="{{ form_widget(form.career.vars.prototype) | e }}">
+    
+    {% for careerField in form.career %}
+    <li>
+      {{ form_errors(careerField) }}
+      {{ form_widget(careerField) }}
+    </li>
+    {% endfor %}
+  </ul>
+
+  <a href="#" id="add-another-career">Add another career</a>
+{{ form_rest(form) }}
+<input type="submit" />
+</form>
+
+<script type="text/javascript">
+  // keep track of how many career fields have been rendered
+  var careerCount = '{{ form.career | length }}';
+
+  jQuery(document).ready(function() {
+  jQuery('#add-another-career').click(function() {
+  var careerList = jQuery('#career-fields-list');
+
+  // grab the prototype template
+  var newWidget = careerList.attr('data-prototype');
+  // replace the "__name__" used in the id and name of the prototype
+  // with a number that's unique to our career
+  // end name attribute looks like name="contact[career][2]"
+  newWidget = newWidget.replace(/__name__/g, careerCount);
+  careerCount++;
+
+  // create a new list element and add it to our list
+  var newLi = jQuery('<li></li>').html(newWidget);
+  newLi.appendTo(jQuery('#career-fields-list'));
+
+  return false;
+  });
+  })
+</script>
+{% endblock body %}

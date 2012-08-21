@@ -11,7 +11,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
     Sensio\Bundle\FrameworkExtraBundle\Configuration\Method
     ;
 
-use IMAG\PhdCallBundle\Entity\PhdUser;
+use IMAG\PhdCallBundle\Entity\PhdUser,
+    IMAG\PhdCallBundle\Entity\Application,
+    IMAG\PhdCallBundle\Form\Type\ApplicationType
+    ;
 
 /**
  * @Route("/application")
@@ -19,34 +22,93 @@ use IMAG\PhdCallBundle\Entity\PhdUser;
 class ApplicationController extends Controller
 {
     /**
-     * @Route("/{id}", name="apply_new")
+     * @Route("", name="application_index")
+     * @Template()
+     * @Method("GET")
+     */
+    public function indexAction()
+    {
+        $applications = $this->getDoctrine()->getManager()
+            ->getRepository("IMAGPhdCallBundle:Application")
+            ->getByUser($this->getUser())
+            ;
+
+        return array(
+            'applications' => $applications
+        );
+    }
+    
+    /**
+     * @Route("/{id}", name="application_new")
      * @Template()
      * @Method("GET")
      */
     public function newAction($id)
     {
-
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->getUser();
-
-        if (true === $this->isSubcribe($id)) {
-            return $this->render('IMAGPhdCallBundle:Error:error.html.twig');
-        }
+        $form = $this->createForm(new ApplicationType());
         
-        $phd = $this->getDoctrine()->getManager()
-            ->getRepository('IMAGPhdCallBundle:Phd')
-            ->getById($id)
-            ;
-        
-        if (null === $phd) {
-            throw $this->createNotFoundException("This phd doesn't exists");
-        }
+        return array(
+            'form' => $form->createView()
+        );
 
+
+
+        /*
+          $em = $this->getDoctrine()->getManager();
+          $user = $this->getUser();
+
+          if (true === $this->isSubcribe($id)) {
+          return $this->render('IMAGPhdCallBundle:Error:error.html.twig');
+          }
+        
+          $phd = $this->getDoctrine()->getManager()
+          ->getRepository('IMAGPhdCallBundle:Phd')
+          ->getById($id)
+          ;
+        
+          if (null === $phd) {
+          throw $this->createNotFoundException("This phd doesn't exists");
+          }
+
+          $phdUser = new PhdUser();
+          $phdUser->setUser($user);
+          $phdUser->setPhd($phd);
+          $em->persist($phdUser);
+          $em->flush();   
+        */
+    }
+
+    /**
+     * @Route("/{id}", name="application_create")
+     * @Template("IMAGPhdCallBundle:Application:new.html.twig")
+     * @Method("POST")
+     */
+    public function createAction(Request $request, $id)
+    {
         $phdUser = new PhdUser();
-        $phdUser->setUser($user);
-        $phdUser->setPhd($phd);
-        $em->persist($phdUser);
-        $em->flush();   
+        $application = new Application();
+        $form = $this->createForm(new ApplicationType(), $application);
+        $em = $this->getDoctrine()->getManager();
+        
+        $form->bind($request);
+
+        if ($form->isValid()) {
+            $em->persist($application);
+                       
+            $phdUser
+                ->setApplication($application) 
+                ->setUser($this->getUser())
+                ->setPhd($em->getReference('IMAGPhdCallBundle:Phd', $id))
+                ;
+            $em->persist($phdUser);
+
+            $em->flush();
+            $this->redirect($this->generateUrl());
+        }
+
+        return array(
+            'form' => $form->createView()
+        );
     }
 
     private function isSubcribe($id)
