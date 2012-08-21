@@ -19,13 +19,21 @@ class PhdCategoryFixtures extends AbstractFixture implements OrderedFixtureInter
     {
         $cat = new PhdCategory();
         $cat
-            ->setName('Cat1')
+            ->setName('Physique')
             ;
 
         $manager->persist($cat);
+
+        $cat1 = new PhdCategory();
+        $cat1
+            ->setName('Chimie')
+            ;
+        $manager->persist($cat1);
+
         $manager->flush();
 
-        $this->addReference('phdCategory1', $cat);         
+        $this->addReference('Physique', $cat);
+        $this->addReference('Chimie', $cat1);     
     }
 
     public function getOrder()
