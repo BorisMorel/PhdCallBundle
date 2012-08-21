@@ -24,6 +24,23 @@ use IMAG\PhdCallBundle\Form\Type\PhdType,
 class PhdController extends Controller
 {
     /**
+     * @Route("/", name="phd_index")
+     * @Template()
+     * @Method("GET")
+     */
+    public function indexAction()
+    {
+        $phds = $this->getDoctrine()->getManager()
+            ->getRepository("IMAGPhdCallBundle:Phd")
+            ->getAll()
+            ;
+
+        return array(
+            'phds' => $phds
+        );
+    }
+
+    /**
      * @Route("/{id}", name="phd_show", requirements={"id" = "\d+"})
      * @Template()
      * @Method("GET")

@@ -1,0 +1,11 @@
+{% extends "IMAGPhdCallBundle::layout.html.twig" %}
+
+{% block body %}
+<ul>
+{% for phd in phds %}
+<li>
+  <a href="{{ path('apply_new', {'id': phd.id}) }}">{{ phd.subject }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endblock body %}
