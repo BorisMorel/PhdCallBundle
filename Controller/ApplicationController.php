@@ -14,9 +14,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route,
 use IMAG\PhdCallBundle\Entity\PhdUser;
 
 /**
- * @Route("/apply")
+ * @Route("/application")
  */
-class ApplyController extends Controller
+class ApplicationController extends Controller
 {
     /**
      * @Route("/{id}", name="apply_new")
@@ -25,8 +25,14 @@ class ApplyController extends Controller
      */
     public function newAction($id)
     {
+
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
+
+        if (true === $this->isSubcribe($id)) {
+            return $this->render('IMAGPhdCallBundle:Error:error.html.twig');
+        }
+        
         $phd = $this->getDoctrine()->getManager()
             ->getRepository('IMAGPhdCallBundle:Phd')
             ->getById($id)
@@ -41,6 +47,18 @@ class ApplyController extends Controller
         $phdUser->setPhd($phd);
         $em->persist($phdUser);
         $em->flush();   
+    }
+
+    private function isSubcribe($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+     
+        if (null === $em->getRepository("IMAGPhdCallBundle:PhdUser")->userIdHavePhdId($user->getId(), $id)) {
+            return false;
+        }
+
+        return true;     
     }
 
 }
