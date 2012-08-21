@@ -50,6 +50,12 @@ class PhdUser
     protected $user;
 
     /**
+     * @ORM\OneToOne(targetEntity="Application", inversedBy="phdUser")
+     * @Assert\Type("object")
+     */
+    protected $application;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -60,6 +66,17 @@ class PhdUser
     }
 
     /**
+     * Set createdAt
+     *
+     * @param datetime $createdAt
+     * @return Application
+     */
+    public function setCreatedAt($createdAt)
+    {
+        return new Expt\AccessDeniedException("Creation date can be setted only by self::");
+    }
+    
+    /**
      * Get createdAt
      *
      * @return datetime 
@@ -67,6 +84,17 @@ class PhdUser
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+   
+    /**
+     * Set updatedAt
+     *
+     * @param datetime $updatedAt
+     * @return Application
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        return new Expt\AccessDeniedException("Modification date can be setted only by self::");
     }
 
     /**
@@ -137,4 +165,25 @@ class PhdUser
     }
 
 
+    /**
+     * Set application
+     *
+     * @param IMAG\PhdCallBundle\Entity\Application $application
+     * @return PhdUser
+     */
+    public function setApplication(\IMAG\PhdCallBundle\Entity\Application $application = null)
+    {
+        $this->application = $application;
+        return $this;
+    }
+
+    /**
+     * Get application
+     *
+     * @return IMAG\PhdCallBundle\Entity\Application 
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
 }

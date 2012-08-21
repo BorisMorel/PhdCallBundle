@@ -64,7 +64,7 @@ class Phd
      * @ORM\OneToMany(targetEntity="PhdUser", mappedBy="phd")
      * @Assert\Type("object")
      */
-    protected $users;
+    protected $phdUsers;
 
     /**
      * @ORM\ManyToOne(targetEntity="PhdCategory", inversedBy="phds")
@@ -77,7 +77,7 @@ class Phd
     public function __construct()
     {
         $this->createdAt = $this->updatedAt = new \DateTime('now');
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->phdUsers = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -176,35 +176,35 @@ class Phd
     }
 
     /**
-     * Add users
+     * Add phdUser
      *
      * @param IMAG\PhdCallBundle\Entity\PhdUser $user
      * @return Phd
      */
-    public function addUser(\IMAG\PhdCallBundle\Entity\PhdUser $user)
+    public function addPhdUser(\IMAG\PhdCallBundle\Entity\PhdUser $user)
     {
-        $this->users[] = $user;
+        $this->phdUsers[] = $user;
         return $this;
     }
 
     /**
-     * Remove users
+     * Remove phdUser
      *
      * @param IMAG\PhdCallBundle\Entity\PhdUser $user
      */
-    public function removeUser(\IMAG\PhdCallBundle\Entity\PhdUser $user)
+    public function removePhdUser(\IMAG\PhdCallBundle\Entity\PhdUser $user)
     {
-        $this->users->removeElement($user);
+        $this->phdUsers->removeElement($user);
     }
 
     /**
-     * Get users
+     * Get phdUsers
      *
      * @return Doctrine\Common\Collections\Collection 
      */
-    public function getUsers()
+    public function getPhdUsers()
     {
-        return $this->users;
+        return $this->phdUsers;
     }
 
     /**
