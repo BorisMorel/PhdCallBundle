@@ -7,6 +7,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\Exception as Expt;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+use IMAG\PhdCallBundle\Form\Type\CareerType;
+
 /**
  * @ORM\Entity(repositoryClass="IMAG\PhdCallBundle\Repository\ApplicationRepository")
  * @ORM\Table(name="Application")
@@ -65,6 +67,9 @@ class Application
 
     public function __construct()
     {
+        $this->career = array(
+            array(),
+        ); // To init one element for the display
         $this->createdAt = $this->updatedAt = new \DateTime('now');
         $this->isConfirmed = false;
     }
@@ -108,7 +113,7 @@ class Application
      * @param array $career
      * @return Application
      */
-    public function setCareer($career)
+    public function setCareer(array $career)
     {
         $this->career = $career;
 
