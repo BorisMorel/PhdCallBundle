@@ -4,7 +4,7 @@
 <ul>
 {% for phd in phds %}
 <li>
-  <a href="{{ path('application_new', {'id': phd.id}) }}">{{ phd.subject }}</a>
+  <a href="{{ path('application_new', {'phdId': phd.id}) }}">{{ phd.subject }}</a>
 </li>
 {% endfor %}
 </ul>
