@@ -1,7 +1,7 @@
 {% extends "IMAGPhdCallBundle::layout.html.twig" %}
 
 {% block body %}
-<form action="{{ path('application_create', {'id': app.request.get('id')}) }}" method="POST" {{ form_enctype(form) }}>
+<form action="{{ path('application_create', {'phdId': app.request.get('phdId')}) }}" method="POST" {{ form_enctype(form) }}>
 {{ form_errors(form) }}
 
   {{ form_widget(form.motivation) }}
