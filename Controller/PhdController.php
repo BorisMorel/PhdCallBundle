@@ -24,7 +24,7 @@ use IMAG\PhdCallBundle\Form\Type\PhdType,
 class PhdController extends Controller
 {
     /**
-     * @Route("/", name="phd_index")
+     * @Route("", name="phd_index")
      * @Template()
      * @Method("GET")
      */
@@ -77,7 +77,7 @@ class PhdController extends Controller
     }
 
     /**
-     * @Route("/", name="phd_create")
+     * @Route("", name="phd_create")
      * @Template("IMAGPhdCallBundle:Phd:new.html.twig")
      * @Method("POST")
      * @Secure(roles="ROLE_ADMIN")

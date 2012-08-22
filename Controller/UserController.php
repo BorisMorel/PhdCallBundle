@@ -38,7 +38,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/", name="user_create")
+     * @Route("", name="user_create")
      * @Template("IMAGPhdCallBundle:User:new.html.twig")
      * @Method("POST")
      */
