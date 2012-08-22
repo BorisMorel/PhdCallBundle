@@ -12,15 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class PhdUserRepository extends EntityRepository
 {
-    public function userIdHavePhdId($userId, $phdId)
+    public function userHavePhd(\IMAG\PhdCallBundle\Entity\User $user, \IMAG\PhdCallBundle\Entity\Phd $phd)
     {
         $q = $this->createQueryBuilder('pu')
             ->select('pu')
-            ->where('pu.user = ?1')
-            ->andWhere('pu.phd = ?2')
+            ->where('pu.user = :user')
+            ->andWhere('pu.phd = :phd')
             ->setParameters(array(
-                1 => $userId,
-                2 => $phdId
+                'user' => $user,
+                'phd'  => $phd
             ))
             ->getQuery()
             ;

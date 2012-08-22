@@ -1,0 +1,9 @@
+{% extends "IMAGPhdCallBundle::layout.html.twig" %}
+
+{% block body %}
+<ul>
+  {% for application in applications %}
+  <li>{{ application.id }}</li>
+  {% endfor %}
+</ul>
+{% endblock body %}

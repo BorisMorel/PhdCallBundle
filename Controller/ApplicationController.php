@@ -21,6 +21,7 @@ use IMAG\PhdCallBundle\Entity\PhdUser,
  */
 class ApplicationController extends Controller
 {
+    
     /**
      * @Route("", name="application_index")
      * @Template()
@@ -39,52 +40,30 @@ class ApplicationController extends Controller
     }
     
     /**
-     * @Route("/{id}", name="application_new")
+     * @Route("/new/phd/{phdId}", name="application_new")
      * @Template()
      * @Method("GET")
      */
-    public function newAction($id)
+    public function newAction($phdId)
     {
-        $form = $this->createForm(new ApplicationType());
+        $phd = $this->isReady($phdId);
+
+        $form = $this->createForm(new ApplicationType(), new Application());
         
         return array(
             'form' => $form->createView()
         );
-
-
-
-        /*
-          $em = $this->getDoctrine()->getManager();
-          $user = $this->getUser();
-
-          if (true === $this->isSubcribe($id)) {
-          return $this->render('IMAGPhdCallBundle:Error:error.html.twig');
-          }
-        
-          $phd = $this->getDoctrine()->getManager()
-          ->getRepository('IMAGPhdCallBundle:Phd')
-          ->getById($id)
-          ;
-        
-          if (null === $phd) {
-          throw $this->createNotFoundException("This phd doesn't exists");
-          }
-
-          $phdUser = new PhdUser();
-          $phdUser->setUser($user);
-          $phdUser->setPhd($phd);
-          $em->persist($phdUser);
-          $em->flush();   
-        */
     }
 
     /**
-     * @Route("/{id}", name="application_create")
+     * @Route("/phd/{phdId}", name="application_create")
      * @Template("IMAGPhdCallBundle:Application:new.html.twig")
      * @Method("POST")
      */
-    public function createAction(Request $request, $id)
+    public function createAction(Request $request, $phdId)
     {
+        $phd = $this->isReady($phdId);
+
         $phdUser = new PhdUser();
         $application = new Application();
         $form = $this->createForm(new ApplicationType(), $application);
@@ -98,7 +77,7 @@ class ApplicationController extends Controller
             $phdUser
                 ->setApplication($application) 
                 ->setUser($this->getUser())
-                ->setPhd($em->getReference('IMAGPhdCallBundle:Phd', $id))
+                ->setPhd($phd)
                 ;
             $em->persist($phdUser);
 
@@ -111,16 +90,27 @@ class ApplicationController extends Controller
         );
     }
 
-    private function isSubcribe($id)
+    /**
+     * Check many parts before trying to create a new application
+     *
+     * @param int phdId
+     * @return \IMAG\PhdCallBundle\Entity\Phd
+     */
+    private function isReady($phdId)
     {
         $em = $this->getDoctrine()->getManager();
-        $user = $this->getUser();
-     
-        if (null === $em->getRepository("IMAGPhdCallBundle:PhdUser")->userIdHavePhdId($user->getId(), $id)) {
-            return false;
+        $phd = $em->getRepository('IMAGPhdCallBundle:Phd')
+            ->getById($phdId)
+            ;
+            
+        if (null === $phd) {
+            throw $this->createNotFoundException("This phd doesn't exists");
+        }
+        if ( null !== $em->getRepository('IMAGPhdCallBundle:PhdUser')
+             ->userHavePhd($this->getUser(), $phd)) {
+            throw $this->createNotFoundException('This application exists');
         }
 
-        return true;     
+        return $phd;     
     }
-
 }

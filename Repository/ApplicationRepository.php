@@ -8,7 +8,7 @@ use IMAG\PhdCallBundle\Entity\User;
 
 class ApplicationRepository extends EntityRepository
 {
-    public function getByUser(user $user)
+    public function getByUser(User $user)
     {
         $q = $this->createQueryBuilder('a')
             ->select('a')
@@ -19,6 +19,6 @@ class ApplicationRepository extends EntityRepository
             ->getQuery()
             ;
 
-        return $q->getSingleResult();
+        return $q->getResult();
     }
 }
