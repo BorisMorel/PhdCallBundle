@@ -116,6 +116,11 @@ class User implements UserInterface, EquatableInterface, \Serializable
      * @ORM\OneToMany(targetEntity="PhdUser", mappedBy="user")
      */
     protected $phdUsers;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Student", mappedBy="user")
+     */
+    protected $student;
     
     public function __construct()
     {

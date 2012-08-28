@@ -5,9 +5,6 @@ namespace IMAG\PhdCallBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\Exception as Expt;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
-use IMAG\PhdCallBundle\Form\Type\CareerType;
 
 /**
  * @ORM\Entity(repositoryClass="IMAG\PhdCallBundle\Repository\ApplicationRepository")
@@ -16,7 +13,7 @@ use IMAG\PhdCallBundle\Form\Type\CareerType;
  */
 class Application
 {
-    /**
+    /** 
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -30,13 +27,6 @@ class Application
      * @Assert\NotBlank(message="Your motivation arguments are required")
      */
     protected $motivation;
-
-    /**
-     * @ORM\Column(type="array")
-     * @Assert\Type("array")
-     * @Assert\NotNull()
-     */
-    protected $career;
   
     /**
      * @ORM\Column(type="boolean")
@@ -60,16 +50,14 @@ class Application
     protected $updatedAt;
 
     /**
-     * @ORM\OneToOne(targetEntity="PhdUser", mappedBy="application")
+     * @ORM\OneToOne(targetEntity="PhdUser", inversedBy="application")
+     * @ORM\JoinColumn(name="phd_user_id", nullable=false)
      * @Assert\Type("object")
      */
     protected $phdUser;
 
     public function __construct()
     {
-        $this->career = array(
-            array(),
-        ); // To init one element for the display
         $this->createdAt = $this->updatedAt = new \DateTime('now');
         $this->isConfirmed = false;
     }
@@ -105,29 +93,6 @@ class Application
     public function getMotivation()
     {
         return $this->motivation;
-    }
-
-    /**
-     * Set career
-     *
-     * @param array $career
-     * @return Application
-     */
-    public function setCareer(array $career)
-    {
-        $this->career = $career;
-
-        return $this;
-    }
-
-    /**
-     * Get career
-     *
-     * @return array 
-     */
-    public function getCareer()
-    {
-        return $this->career;
     }
 
     /**
@@ -194,14 +159,14 @@ class Application
     {
         return $this->updatedAt;
     }
-
+    
     /**
      * Set phdUser
      *
      * @param IMAG\PhdCallBundle\Entity\PhdUser $phdUser
      * @return Application
      */
-    public function setPhdUser(\IMAG\PhdCallBundle\Entity\PhdUser $phdUser = null)
+    public function setPhdUser(\IMAG\PhdCallBundle\Entity\PhdUser $phdUser)
     {
         $this->phdUser = $phdUser;
         return $this;

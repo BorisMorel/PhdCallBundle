@@ -37,21 +37,21 @@ class PhdUser
     protected $updatedAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Phd", inversedBy="users")
+     * @ORM\ManyToOne(targetEntity="Phd", inversedBy="phdUsers")
      * @ORM\JoinColumn(name="phd_id", referencedColumnName="id", nullable=false)
+     * @Assert\Type("object")
      */
     protected $phd;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="phds")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="phdUsers")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      * @Assert\Type("object")
      */
     protected $user;
 
     /**
-     * @ORM\OneToOne(targetEntity="Application", inversedBy="phdUser")
-     * @Assert\Type("object")
+     * @ORM\OneToOne(targetEntity="Application", mappedBy="phdUser")
      */
     protected $application;
 
