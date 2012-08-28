@@ -1,0 +1,10 @@
+{% extends "IMAGPhdCallBundle::layout.html.twig" %}
+
+{% block body %}
+<form action="{{ path('application_update', {'id': app.request.attributes.get('id')}) }}" method="post" {{ form_enctype(form) }}>
+  {{ form_widget(form) }}
+  <input type="hidden" name="_method" value="PUT" />
+  <input type="submit" />
+</form>
+
+{% endblock body %}

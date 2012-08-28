@@ -14,16 +14,7 @@ class ApplicationType extends AbstractType
     {
         $builder
             ->add('motivation')
-            ->add('career', 'collection', array(
-                'type' => new CareerType(),
-                'options' => array(
-                    'required' => false,
-                    'attr' => array('class' => 'career-box')
-                ),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype' => true
-            ));
+            ;
     }
     
     public function setDefaultOptions(OptionsResolverInterface $resolver)

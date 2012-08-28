@@ -1,0 +1,68 @@
+{% extends "IMAGPhdCallBundle::layout.html.twig" %}
+
+{% block body %}
+<form action="{{ path('student_create') }}" method="POST" {{ form_enctype(form) }}>
+{{ form_errors(form) }}
+  <ul id="career-fields-list" data-prototype="{{ form_widget(form.career.vars.prototype) | e }}">
+    
+    {% for careerField in form.career %}
+    <li>
+      {{ form_errors(careerField) }}
+      {{ form_widget(careerField) }}
+    </li>
+    {% endfor %}
+  </ul>
+
+  <a href="#" id="add-another-career">Add another career</a>
+{{ form_rest(form) }}
+<input type="submit" />
+</form>
+
+<script type="text/javascript">
+    // keep track of how many career fields have been rendered
+    var careerCount = '{{ form.career | length }}';
+
+jQuery(document).ready(function() {
+    jQuery('#add-another-career').click(function() {
+        var careerList = jQuery('#career-fields-list');
+        
+        // grab the prototype template
+        var newWidget = careerList.attr('data-prototype');
+        // replace the "__name__" used in the id and name of the prototype
+        // with a number that's unique to our career
+        // end name attribute looks like name="contact[career][2]"
+        newWidget = newWidget.replace(/__name__/g, careerCount);
+        careerCount++;
+        
+        // create a new list element and add it to our list
+        var newLi = jQuery('<li></li>').html(newWidget);
+        addTagFormDeleteLink(newLi);
+        newLi.appendTo(jQuery('#career-fields-list'));
+        
+        return false;
+    });
+})
+</script>
+<script type="text/javascript">
+  var collectionHolder = $('ul#career-fields-list');
+    jQuery(document).ready(function() {
+        // add a delete link to all of the existing tag form li elements
+        collectionHolder.find('li').each(function() {
+            addTagFormDeleteLink($(this));
+        });
+    });
+
+function addTagFormDeleteLink($tagFormLi) {
+    var $removeFormA = $('<a href="#">delete this tag</a>');
+    $tagFormLi.append($removeFormA);
+    
+    $removeFormA.on('click', function(e) {
+        // prevent the link from creating a "#" on the URL
+        e.preventDefault();
+        
+        // remove the li for the tag form
+        $tagFormLi.remove();
+    });
+}
+</script>
+{% endblock body %}

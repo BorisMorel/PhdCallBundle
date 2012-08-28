@@ -44,10 +44,11 @@ class UserController extends Controller
      */
     public function createAction(Request $request)
     {
+     
         $form = $this->createForm(new UserType());
         
         if ($this->processForm($request, $form)) {
-            $this->redirect($this->generateUrl('apply', array('id' => $form->getData()->getId())));
+            return $this->redirect($this->generateUrl('student_new'));
         }
 
         return array(

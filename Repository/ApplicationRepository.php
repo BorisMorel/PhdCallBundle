@@ -21,4 +21,18 @@ class ApplicationRepository extends EntityRepository
 
         return $q->getResult();
     }
+
+    public function getById($id)
+    {
+        $q = $this->createQueryBuilder('a')
+            ->select('a','u', 'pu')
+            ->join('a.phdUser', 'pu')
+            ->join('pu.user', 'u')
+            ->where('a.id = :appId')
+            ->setParameter('appId', $id)
+            ->getQuery()
+            ;
+
+        return $q->getOneOrNullResult();
+    }
 }
