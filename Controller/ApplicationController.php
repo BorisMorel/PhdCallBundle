@@ -40,15 +40,15 @@ class ApplicationController extends Controller
     }
     
     /**
-     * @Route("/new/phd/{phdId}", name="application_new")
+     * @Route("/new/phd/{id}", name="application_new")
      * @Template()
      * @Method("GET")
      */
-    public function newAction($phdId)
+    public function newAction($id)
     {
-        $phd = $this->isReady($phdId);
+        $phd = $this->isReadyToNew($id);
 
-        $form = $this->createForm(new ApplicationType(), new Application());
+        $form = $this->createForm(new ApplicationType());
         
         return array(
             'form' => $form->createView()
@@ -56,13 +56,13 @@ class ApplicationController extends Controller
     }
 
     /**
-     * @Route("/phd/{phdId}", name="application_create")
+     * @Route("/phd/{id}", name="application_create")
      * @Template("IMAGPhdCallBundle:Application:new.html.twig")
      * @Method("POST")
      */
-    public function createAction(Request $request, $phdId)
+    public function createAction(Request $request, $id)
     {
-        $phd = $this->isReady($phdId);
+        $phd = $this->isReadyToNew($id);
 
         $phdUser = new PhdUser();
         $application = new Application();
@@ -72,17 +72,61 @@ class ApplicationController extends Controller
         $form->bind($request);
 
         if ($form->isValid()) {
-            $em->persist($application);
-                       
             $phdUser
-                ->setApplication($application) 
                 ->setUser($this->getUser())
                 ->setPhd($phd)
                 ;
+
             $em->persist($phdUser);
 
-            $em->flush();
-            $this->redirect($this->generateUrl());
+            $application->setPhdUser($phdUser);
+            $em->persist($application);
+
+            $em->flush();            
+
+            return $this->redirect($this->generateUrl('application_edit', array('id' => $form->getData()->getId())));
+        }
+
+        return array(
+            'form' => $form->createView()
+        );
+    }
+
+    /**
+     * @Route("/{id}/edit", name="application_edit")
+     * @Template()
+     * @Method("GET")
+     */
+    public function editAction($id)
+    {
+        $application = $this->isReadyToEdit($id);
+
+        $form = $this->createForm(new ApplicationType(), $application);
+
+        return array(
+            'form' => $form->createView()
+        );
+    }
+
+       /**
+     * @Route("/{id}", name="application_update")
+     * @Template("IMAGPhdCallBundle:Application:edit.html.twig")
+     * @Method("PUT")
+     */
+    public function updateAction(Request $request, $id)
+    {
+        $application = $this->isReadyToEdit($id);
+
+        $em = $this->getDoctrine()->getManager();
+
+        $form = $this->createForm(new ApplicationType(), $application);
+        
+        $form->bind($request);
+
+        if ($form->isValid()) {
+            //TODO ICI !
+
+            return $this->redirect($this->generateUrl('application_edit', array('id' => $application->getId())));
         }
 
         return array(
@@ -93,14 +137,14 @@ class ApplicationController extends Controller
     /**
      * Check many parts before trying to create a new application
      *
-     * @param int phdId
+     * @param int id
      * @return \IMAG\PhdCallBundle\Entity\Phd
      */
-    private function isReady($phdId)
+    private function isReadyToNew($id)
     {
         $em = $this->getDoctrine()->getManager();
         $phd = $em->getRepository('IMAGPhdCallBundle:Phd')
-            ->getById($phdId)
+            ->getById($id)
             ;
             
         if (null === $phd) {
@@ -112,5 +156,28 @@ class ApplicationController extends Controller
         }
 
         return $phd;     
+    }
+
+    /**
+     * Check many parts before trying to edit an application
+     *
+     * @param int id
+     * @return \IMAG\PhdCallBundle\Entity\Application
+     */
+    private function isReadyToEdit($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $application = $em->getRepository('IMAGPhdCallBundle:Application')
+            ->getById($id)
+            ;
+
+        if (null === $application) {
+            throw $this->createNotFoundException("This application doesn't exists");
+        }
+        if ($this->getUser() !== $application->getPhdUser()->getUser()) {
+            throw $this->createNotFoundException("Please edit only YOUR application");
+        }
+
+        return $application;
     }
 }
