@@ -43,7 +43,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         }
 
         $q = $this->createQueryBuilder('u')
-            ->select('u')
+            ->select('u', 'us')
+            ->leftJoin('u.student', 'us')
             ->where('u.email LIKE ?1')
             ->setParameter(1, $username)
             ->getQuery()
