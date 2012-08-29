@@ -1,11 +1,9 @@
 {% extends "IMAGPhdCallBundle::layout.html.twig" %}
 
 {% block body %}
-<form action="{{ path('application_update', {'id': app.request.get('id')}) }}" method="POST" {{ form_enctype(form) }}>
+<form action="{{ path('student_update') }}" method="POST" {{ form_enctype(form) }}>
 <input type="hidden" name="_method" value="PUT" />
 {{ form_errors(form) }}
-
-  {{ form_widget(form.motivation) }}
   <ul id="career-fields-list" data-prototype="{{ form_widget(form.career.vars.prototype) | e }}">
     
     {% for careerField in form.career %}

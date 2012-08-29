@@ -25,15 +25,13 @@ class Student
     /**
      * @ORM\Column(type="array")
      * @Assert\Type("array")
-     * @Assert\NotNull()
+     * @Assert\NotBlank(message="You need to provide your career")
      */
     protected $career;
 
     /**
      * @ORM\OneToOne(targetEntity="User", inversedBy="student")
      * @ORM\JoinColumn(nullable=false)
-     * @Assert\Type("object")
-     * @Assert\NotNull
      */
     protected $user;
 

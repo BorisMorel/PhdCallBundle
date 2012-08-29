@@ -59,6 +59,7 @@ class StudentController extends Controller
 
         if ($form->isValid()) {
             $student->setUser($this->getUser());
+            $student->setCareer($this->renumberingCareer($student->getCareer()));
             $em->persist($student);
             $em->flush();
         }
@@ -93,7 +94,7 @@ class StudentController extends Controller
      * @Template("IMAGPhdCallBundle:Student:edit.html.twig")
      * @Method("PUT")
      */
-    public function updateAction()
+    public function updateAction(Request $request)
     {
         $student = $this->studentExists();
 
@@ -104,11 +105,19 @@ class StudentController extends Controller
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(new StudentType(), $student);
 
+        $form->bind($request);
+
         if ($form->isValid()) {
+            $student->setCareer($this->renumberingCareer($student->getCareer()));
             $em->persist($student);
             $em->flush();
+
+            return $this->redirect($this->generateUrl('phd_index'));
         }
-                
+
+        return array(
+            'form' => $form->createView()
+        );                
     }
 
     /**
@@ -116,7 +125,6 @@ class StudentController extends Controller
      *
      * @return mixed false|IMAG\PhdCallBundle\Entity\Student
      */
-
     private function studentExists() {
         
         $student = $this->getDoctrine()->getManager()
@@ -125,5 +133,22 @@ class StudentController extends Controller
             ;
 
         return (null === $student) ? false : $student;
+    }
+
+    /**
+     * Renumbering the career array to prevent the hold in the array
+     *
+     * @param array $career
+     * @return array $orderingCareer
+     */
+    public function renumberingCareer(array $career)
+    {
+        $orderingCareer = array();
+
+        foreach($career as $item) {
+            $orderingCareer[] = $item;
+        }
+
+        return $orderingCareer;
     }
 }
