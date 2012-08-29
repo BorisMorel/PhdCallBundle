@@ -36,6 +36,7 @@ class SuccessHandler implements AuthenticationSuccessHandlerInterface
             ;
         
         if (null === $student) {
+            $request->getSession()->setFlash('notice', 'Please fill your profil information');
             return 'student_new';
         }
 
