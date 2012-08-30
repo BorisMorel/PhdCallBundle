@@ -4,7 +4,9 @@ namespace IMAG\PhdCallBundle\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-use IMAG\PhdCallBundle\Event\UserEvent;
+use IMAG\PhdCallBundle\Event\UserEvent,
+    IMAG\PhdCallBundle\Event\PhdCallEvents
+    ;
 
 class UserSubscriber implements EventSubscriberInterface
 {
@@ -24,10 +26,10 @@ class UserSubscriber implements EventSubscriberInterface
     static public function getSubscribedEvents()
     {
         return array(
-            'phd_call.user.created.pre' => array('onUserCreatedPre', 128),
-            'phd_call.user.created.post' => array('onUserCreatedPost', 0),
-            'phd_call.user.updated.pre' => array('onUserUpdatedPre', 128),
-            'phd_call.user.updated.post' => array('onUserUpdatedPost', 0),
+            PhdCallEvents::USER_CREATED_PRE  => array('onUserCreatedPre', 128),
+            PhdCallEvents::USER_CREATED_POST => array('onUserCreatedPost', 0),
+            PhdCallEvents::USER_UPDATED_PRE  => array('onUserUpdatedPre', 128),
+            PhdCallEvents::USER_UPDATED_POST => array('onUserUpdatedPost', 0),
         );
     }
 
