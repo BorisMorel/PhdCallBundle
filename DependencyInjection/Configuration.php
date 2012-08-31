@@ -21,6 +21,14 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('imag_phd_call');
         $rootNode
             ->children()
+                ->arrayNode('mailer')
+                    ->children()
+                        ->scalarNode('from')->defaultValue('phdCall@FQDN.com')->end()
+                        ->scalarNode('to')->end()
+                        ->scalarNode('subject')->end()
+                        ->scalarNode('template')->end()
+                    ->end()
+                ->end()                    
                 ->scalarNode('reviewer_pass')->isRequired()->cannotBeEmpty()->end()
             ->end()
             ;
