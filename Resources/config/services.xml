@@ -9,8 +9,9 @@
 
       <parameter key="imag_phd_call.component.authentication.handler.success_handler.class">IMAG\PhdCallBundle\Authentication\SuccessHandler</parameter>
 
-      <parameter key="validator.reviewer_key.class">IMAG\PhdCallBundle\Validator\Constraints\ReviewerKeyValidator</parameter>
+      <parameter key="imag_phd_call.validator.reviewer_key.class">IMAG\PhdCallBundle\Validator\Constraints\ReviewerKeyValidator</parameter>
 
+      <parameter key="imag_phd_call.notifier.class">IMAG\PhdCallBundle\Notifier\NotifierBase</parameter>
     </parameters>
 
     <services>
@@ -26,9 +27,15 @@
         <argument>%imag_phd_call.context.params%</argument>
       </service>
 
-      <service id="validator.reviewer_key" class="%validator.reviewer_key.class%">
+      <service id="imag_phd_call.validator.reviewer_key" class="%imag_phd_call.validator.reviewer_key.class%">
         <argument type="service" id="imag_phd_call.context" />
         <tag name="validator.constraint_validator" alias="reviewer_key" />
+      </service>
+
+      <service id="imag_phd_call.notifier" class="%imag_phd_call.notifier.class%">
+        <argument type="service" id="mailer" />
+        <argument type="service" id="templating" />
+        <argument type="service" id="imag_phd_call.context" />
       </service>
 
     </services>
