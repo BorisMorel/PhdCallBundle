@@ -17,5 +17,12 @@ class Context
     {
         return $this->config;
     }
-
+    
+    public function getMailerConfig()
+    {
+        return array(
+            'subject' => '[PERSYVAL] PhdCall Registration Completed',
+            'from' => 'phdcall@persyval-lab.fr',
+        );
+    }
 }
