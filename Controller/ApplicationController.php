@@ -46,6 +46,11 @@ class ApplicationController extends Controller
      */
     public function newAction($id)
     {
+        if (null === $this->getUser()->getStudent()) {
+            $this->get('session')->getFlashBag()->add('notice', 'You need to fill your profil');
+            return $this->redirect($this->generateUrl('student_new'));
+        }
+
         $phd = $this->isReadyToNew($id);
 
         $form = $this->createForm(new ApplicationType());
@@ -62,6 +67,11 @@ class ApplicationController extends Controller
      */
     public function createAction(Request $request, $id)
     {
+        if (null === $this->getUser()->getStudent()) {
+            $request->getSession()->getFlashBag()->add('notice', 'You need to fill your profil');
+            return $this->redirect($this->generateUrl('student_new'));
+        }
+
         $phd = $this->isReadyToNew($id);
 
         $phdUser = new PhdUser();
@@ -124,7 +134,8 @@ class ApplicationController extends Controller
         $form->bind($request);
 
         if ($form->isValid()) {
-            //TODO ICI !
+            $em->persist($application);
+            $em->flush();
 
             return $this->redirect($this->generateUrl('application_edit', array('id' => $application->getId())));
         }
@@ -138,7 +149,7 @@ class ApplicationController extends Controller
      * Check many parts before trying to create a new application
      *
      * @param int id
-     * @return \IMAG\PhdCallBundle\Entity\Phd
+     * @return IMAG\PhdCallBundle\Entity\Phd
      */
     private function isReadyToNew($id)
     {
@@ -150,11 +161,11 @@ class ApplicationController extends Controller
         if (null === $phd) {
             throw $this->createNotFoundException("This phd doesn't exists");
         }
-        if ( null !== $em->getRepository('IMAGPhdCallBundle:PhdUser')
-             ->userHavePhd($this->getUser(), $phd)) {
+        if (null !== $em->getRepository('IMAGPhdCallBundle:PhdUser')
+            ->userHavePhd($this->getUser(), $phd)) {
             throw $this->createNotFoundException('This application exists');
         }
-
+     
         return $phd;     
     }
 
@@ -162,7 +173,7 @@ class ApplicationController extends Controller
      * Check many parts before trying to edit an application
      *
      * @param int id
-     * @return \IMAG\PhdCallBundle\Entity\Application
+     * @return IMAG\PhdCallBundle\Entity\Application
      */
     private function isReadyToEdit($id)
     {
