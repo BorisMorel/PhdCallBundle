@@ -19,14 +19,14 @@ class UserType extends AbstractType
             ->add('zip')
             ->add('city')
             ;
+        
         if (true === $options['allowedRolesChoices']) {
             $builder
                 ->add('roles', 'choice', array(
                     'choices' => $options['ctrlOptions']['choices'],
                     'multiple' => true,
                     'expanded' => true,
-                ))
-                ;
+                ));                
         }
     }
 

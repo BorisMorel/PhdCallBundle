@@ -385,6 +385,18 @@ class User implements UserInterface, EquatableInterface, \Serializable
     }
 
     /**
+     * Set createdAt
+     *
+     * @param datetime $createdAt
+     * @return User
+     */
+    public function setCreatedAt($createdAt)
+    {
+        return new Expt\AccessDeniedException("Creation date can be setted only by self::");
+    }
+
+
+    /**
      * Get createdAt
      *
      * @return datetime 
@@ -392,6 +404,17 @@ class User implements UserInterface, EquatableInterface, \Serializable
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param datetime $updatedAt
+     * @return User
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        return new Expt\AccessDeniedException("Modification date can be setted only by self::");
     }
 
     /**
@@ -434,6 +457,38 @@ class User implements UserInterface, EquatableInterface, \Serializable
     public function getPhdUsers()
     {
         return $this->phdUsers;
+    }
+
+    /**
+     * Set student
+     *
+     * @param IMAG\PhdCallBundle\Entity\Student $student
+     * @return User
+     */
+    public function setStudent(\IMAG\PhdCallBundle\Entity\Student $student = null)
+    {
+        $this->student = $student;
+        return $this;
+    }
+
+    /**
+     * Get student
+     *
+     * @return IMAG\PhdCallBundle\Entity\Student 
+     */
+    public function getStudent()
+    {
+        return $this->student;
+    }
+
+    /**
+     * Get student
+     *
+     * @return IMAG\PhdCallBundle\Entity\Student 
+     */
+    public function getReviewer()
+    {
+        return true;
     }
 
     /**
@@ -500,5 +555,4 @@ class User implements UserInterface, EquatableInterface, \Serializable
     {
         $this->updatedAt = new \DateTime('now');
     }
-
 }

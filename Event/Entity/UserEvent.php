@@ -1,6 +1,6 @@
 <?php
 
-namespace IMAG\PhdCallBundle\Event;
+namespace IMAG\PhdCallBundle\Event\Entity;
 
 use Symfony\Component\EventDispatcher\Event;
 

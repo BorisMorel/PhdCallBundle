@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface,
     ;
 
 use IMAG\PhdCallBundle\Entity\User,
-    IMAG\PhdCallBundle\Event\UserEvent,
+    IMAG\PhdCallBundle\Event\Entity\UserEvent,
     IMAG\PhdCallBundle\Event\PhdCallEvents
     ;
 
