@@ -51,7 +51,7 @@ class UserSubscriber implements EventSubscriberInterface
         $this->notifier
             ->setTo($user->getEmail())
             ->setTplParameters(array(
-                'password' => $user->getPlainPassword()
+                'user' => $user
             ))
             ->setTemplate('IMAGPhdCallBundle:Mail:registration.html.twig')
             ->send()
