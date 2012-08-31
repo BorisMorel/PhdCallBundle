@@ -21,9 +21,11 @@ class IMAGPhdCallExtension extends Extension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-
+        
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
         $loader->load('listeners.xml');
+        
+        $container->setParameter('imag_phd_call.context.params', $config);
     }
 }
