@@ -33,9 +33,9 @@ class UserFixtures extends AbstractFixture implements ContainerAwareInterface, O
         $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
 
         $user
-            ->setLastname('Morel')
-            ->setFirstname('Boris')
-            ->setEmail('boris.morel@imag.fr')
+            ->setLastname('Foo')
+            ->setFirstname('Bob')
+            ->setEmail('toto@imag.fr')
             ->setRoles(array('ROLE_USER', 'ROLE_REVIEWER', 'ROLE_ADMIN'))
             ->setAddress('toto')
             ->setCity('Gre')
