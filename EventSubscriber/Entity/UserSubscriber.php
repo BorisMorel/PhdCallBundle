@@ -12,15 +12,18 @@ class UserSubscriber implements EventSubscriberInterface
 {
     private 
         $mailer,
-        $security
+        $security,
+        $notifier
         ;
 
     public function __construct(\Swift_Mailer $mailer,
-                                \Symfony\Component\Security\Core\Encoder\EncoderFactory $security
+                                \Symfony\Component\Security\Core\Encoder\EncoderFactory $security,
+                                \IMAG\PhdCallBundle\Notifier\NotifierInterface $notifier
     )
     {
         $this->mailer = $mailer;
         $this->security = $security;
+        $this->notifier = $notifier;
     }
 
     static public function getSubscribedEvents()
@@ -45,17 +48,14 @@ class UserSubscriber implements EventSubscriberInterface
     {
         $user = $event->getUser();
 
-        $message = \Swift_Message::newInstance()
-            ->setSubject('[PERSYVAL] PhdCall Registration Completed')
-            ->setFrom('phdcall@persyval-lab.fr')
+        $this->notifier
             ->setTo($user->getEmail())
-            ->setBody($user->getPlainPassword())
-            ;
-
-        if (!$this->mailer->send($message)) {
-            throw new \Exception("Message can't be sending");
-        }
-    
+            ->setTplParameters(array(
+                'password' => $user->getPlainPassword()
+            ))
+            ->setTemplate('IMAGPhdCallBundle:Mail:registration.html.twig')
+            ->send()
+            ;    
     }
 
     public function onUserUpdatedPre(UserEvent $event)
