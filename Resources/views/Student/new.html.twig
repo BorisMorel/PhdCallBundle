@@ -1,12 +1,11 @@
 {% extends "IMAGPhdCallBundle::layout.html.twig" %}
 
 {% block body %}
-{% if app.session.hasFlash('notice') %}
+{% for flashMessage in app.session.flashbag.get('notice') %}
     <div class="flash-notice">
-        {{ app.session.flash('notice') }}
+        {{ flashMessage }}
     </div>
-{% endif %}
-
+{% endfor %}
 <form action="{{ path('student_create') }}" method="POST" {{ form_enctype(form) }}>
 {{ form_errors(form) }}
   <ul id="career-fields-list" data-prototype="{{ form_widget(form.career.vars.prototype) | e }}">

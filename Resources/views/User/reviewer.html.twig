@@ -1,0 +1,9 @@
+{% extends "IMAGPhdCallBundle::layout.html.twig" %}
+
+{% block body %}
+<form action="{{ path('user_role_reviewer') }}" method="post" {{ form_enctype(form) }}>
+  {{ form_widget(form) }}
+  <input type="submit" />
+</form>
+
+{% endblock body %}

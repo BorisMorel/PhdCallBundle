@@ -1,0 +1,7 @@
+{% extends "IMAGPhdCallBundle::layout.html.twig" %}
+
+{% block body %}
+{% for application in applications %}
+<a href="{{ path('application_edit', {'id': application.id}) }}">{{ application.id }}</a>
+{% endfor %}
+{% endblock body %}
