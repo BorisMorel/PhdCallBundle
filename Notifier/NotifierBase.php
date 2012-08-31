@@ -11,7 +11,6 @@ class NotifierBase implements NotifierInterface
     private
         $mailer,
         $templating,
-        $appContext,
         $template,
         $params = array()
         ;
@@ -19,7 +18,6 @@ class NotifierBase implements NotifierInterface
     {
         $this->mailer = $mailer;
         $this->templating = $templating;
-        $this->appContext = $appContext;
         $this->params = $appContext->getMailerConfig();
     }
 
