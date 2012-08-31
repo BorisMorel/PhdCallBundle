@@ -6,7 +6,8 @@ use Symfony\Component\Security\Http\HttpUtils,
     Symfony\Component\HttpFoundation\RedirectResponse,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface,
-    Symfony\Component\Security\Core\Authentication\Token\TokenInterface
+    Symfony\Component\Security\Core\Authentication\Token\TokenInterface,
+    Symfony\Component\Security\Core\SecurityContextInterface
     ;
 
 use Doctrine\ORM\EntityManager;
@@ -15,12 +16,14 @@ class SuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     private 
         $httpUtils,
+        $security,
         $em
         ;
 
-    public function __construct(HttpUtils $httpUtils, EntityManager $em)
+    public function __construct(HttpUtils $httpUtils, SecurityContextInterface $security, EntityManager $em)
     {
         $this->httpUtils = $httpUtils;
+        $this->security = $security;
         $this->em = $em;
     }
 
@@ -31,14 +34,17 @@ class SuccessHandler implements AuthenticationSuccessHandlerInterface
 
     private function determinetargetUrl(Request $request, TokenInterface $token)
     {
-        $student = $this->em->getRepository('IMAGPhdCallBundle:Student')
-            ->getByUser($token->getuser())
-            ;
-        
-        if (null === $student) {
-            $request->getSession()->setFlash('notice', 'Please fill your profil information');
-            return 'student_new';
-        }
+        if ($this->security->isGranted('ROLE_REVIEWER')) {
+            if (null === $token->getUser()->getReviewer()) {
+                $request->getSession()->getFlashBag()->add('notice', 'Please fill your profil information');
+                return 'reviewer_new';
+            } 
+        } elseIf ($this->security->isGranted('ROLE_USER')) {
+            if (null === $token->getUser()->getStudent()) {
+                $request->getSession()->getFlashBag()->add('notice', 'Please fill your profil information');
+                return 'student_new';
+            }
+        }              
 
         /**
          * TODO Inject the array options of form to get the parameters
