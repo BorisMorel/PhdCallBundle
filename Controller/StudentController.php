@@ -62,6 +62,8 @@ class StudentController extends Controller
             $student->setCareer($this->renumberingCareer($student->getCareer()));
             $em->persist($student);
             $em->flush();
+
+            return $this->redirect($this->generateUrl('phd_index'));
         }
 
         return array(
